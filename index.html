@@ -1,0 +1,163 @@
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="google-site-verification" content="Czu7o1zghLU9QP0vpQGV3vEgf8wOKDWyUxava4sAiIo" />
+		<meta name="description" content="Firmware changelog of upgrades/updates for AIXUN T3A, T3B and other devices" />
+		<title>AIXUN firmware updates</title>
+		<!-- @formatter:off -->
+		<style>
+			body { font-family: sans-serif; padding-bottom: 15px; }
+			.tabs {
+				border-bottom: 1px solid #ddd;
+			}
+			.tabs a {
+				display: inline-block;
+				padding: 12px 20px 10px 20px;
+				border: 1px solid transparent;
+				border-bottom: none;
+				color: #337ab7;
+				text-decoration: underline;
+				vertical-align: top;
+			}
+			.tabs a b {
+				font-weight: 400;
+			}
+			.tabs a.active {
+				border-color: #ddd;
+				color: #333;
+				text-decoration: none;
+				cursor: default;
+			}
+			.tabs a:hover {
+				text-decoration: none;
+			}
+			.group { display: none; }
+			.group.active { display: block; }
+			.item { white-space: pre-wrap; }
+			@media (max-width: 767.98px) {
+				.tabs a {
+					padding: 12px 15px 10px 15px;
+				}
+
+				.tabs a b {
+					display: none;
+				}
+			}
+		</style>
+		<!-- @formatter:on -->
+	</head>
+	<body>
+		<div class="content">
+			<h1 class="loading"></h1>
+		</div>
+
+		<script src="assets/js/jquery.min.js"></script>
+		<script>
+			$(function () {
+				var loading = $('.loading');
+				var updateLoading = function () {
+					var length = loading.text().length;
+					length++;
+					if (length > 3) {
+						length = 0;
+					}
+					loading.text('.'.repeat(length));
+					if (loading.is(':visible')) {
+						setTimeout(updateLoading, 200);
+					}
+				};
+				updateLoading();
+
+				var switchTab = function (control) {
+					$('.tabs a.active').removeClass('active');
+					control.addClass('active');
+					$('.group.active').removeClass('active');
+					var groupId = control.attr('data-id');
+					$('.group[data-id="' + groupId + '"]').addClass('active');
+					return groupId;
+				};
+
+				$(document).on('click', '.tabs a', function (e) {
+					e.preventDefault();
+					var control = $(this);
+					var groupId = switchTab(control);
+					history.pushState(null, null, '#' + groupId);
+				});
+
+				$.get({
+					url: 'https://usr.tnyzeq.icu/~dd/aixun-updates/changelog.php',
+					success: function (data) {
+						var content = $('.content');
+						var tabs = $('<div class="tabs">');
+						content.append(tabs);
+
+						var counter = 0;
+						for (var model in data) {
+							counter++;
+							var headline = $('<span>').text(model).prepend('<b>AIXUN</b> ');
+							var tab = $('<a href="#">').append(headline.clone(true));
+							var groupId = simplify(model);
+							tab.attr('data-id', groupId);
+							if (counter === 1) {
+								tab.addClass('active');
+							}
+							tabs.append(tab);
+
+							var wrapper = $('<div class="group">');
+							wrapper.append($('<h2>').append(headline.clone(true)));
+							for (var index in data[model]) {
+								var item = $('<div class="item">');
+								var version = data[model][index]['version'];
+								if (version.indexOf(model) === 0) {
+									version = version.substring(model.length + 1);
+								}
+								version += ' (' + data[model][index]['time'] + ')';
+								item.append($('<h3>').text(version));
+								item.append(formatNoteText(data[model][index]['en_note']));
+								item.append(formatNoteText('\n\n' + data[model][index]['ch_note']));
+								wrapper.append(item);
+							}
+							wrapper.attr('data-id', groupId);
+							if (counter === 1) {
+								wrapper.addClass('active');
+							}
+							content.append(wrapper);
+						}
+						loading.hide();
+
+						var hash = window.location.hash;
+						if (hash) {
+							groupId = hash.substring(1, hash.length);
+							var control = $('.tabs a[data-id="' + groupId + '"]');
+							if (control.length) {
+								switchTab(control);
+							}
+						}
+					},
+					error: function (jqXHR, textStatus) {
+						$('.content').append($('<h1>').text(textStatus));
+						loading.hide();
+					}
+				});
+
+				function formatNoteText(content) {
+					content = content.replace(';r\n', ';\r\n');
+					return document.createTextNode(content);
+				}
+
+				function simplify(string) {
+					string = string.replace(/[^a-z0-9]/ig, '-');
+					string = string.replace(/-+/g, '-');
+					if (string[0] === '-') {
+						string = string.substring(1, string.length);
+					}
+					if (string[string.length - 1] === '-') {
+						string = string.substring(0, string.length - 1);
+					}
+					return string.toLowerCase();
+				}
+			});
+		</script>
+	</body>
+</html>

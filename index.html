@@ -121,7 +121,7 @@
                         }
                         var date = ' (' + data[model][index]['time'] + ')';
                         var header = $('<h3>').text(version + date + ' ')
-                        if (model !== 'AIXUN' && data[model][index]['url']) {
+                        if (data[model][index]['url']) {
                             header.append(($('<a>', {
                                 text: 'download',
                                 href: 'http://api.jcxxkeji.com:9000/upload/bott/JC_M_' + model + '_' + version + '.bin'

@@ -1,4 +1,4 @@
-<html>
+<html lang="en">
 <head>
     <!-- Google Tag Manager -->
     <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -9,8 +9,9 @@
     <!-- End Google Tag Manager -->
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <meta name="description" content="Firmware changelog of upgrades/updates for AIXUN T3A, T3B and other Aixun devices"/>
-    <title>AIXUN firmware updates</title>
+    <meta name="description"
+          content="Firmware changelog of upgrades/updates for AiXun T3A, T3B and other AiXun devices"/>
+    <title>AiXun firmware updates changelog</title>
     <!-- @formatter:off -->
 		<style>
 			body { font-family: sans-serif; padding-bottom: 15px; }
@@ -64,11 +65,10 @@
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-F0YMZ6MNHX"></script>
 <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-F0YMZ6MNHX');
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-F0YMZ6MNHX');
 </script>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
@@ -113,7 +113,7 @@
                 var counter = 0;
                 for (var model in data) {
                     counter++;
-                    var headline = $('<span>').text(model).prepend('<b>AIXUN</b> ');
+                    var headline = $('<span>').text(model).prepend('<b>AiXun</b> ');
                     var tab = $('<a href="#">').append(headline.clone(true));
                     var groupId = simplify(model);
                     tab.attr('data-id', groupId);
